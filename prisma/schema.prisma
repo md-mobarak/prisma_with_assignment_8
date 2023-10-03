@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String            @id @default(uuid())
+  name              String
+  email             String            @unique
+  password          String
+  role              String // 'admin' or 'customer'
+  contactNo         String
+  address           String
+  profileImg        String
+  reviewsAndRatings ReviewAndRating[] // Corrected field name
+  orders            Order[]
+
+  // @@map("user")
+}
+
+model Category {
+  id    String @id @default(uuid())
+  title String
+  books Book[] // This is the opposite relation field
+
+  @@map("categories")
+}
+
+model Book {
+  id              String            @id @default(uuid())
+  title           String
+  author          String
+  price           Float
+  genre           String
+  publicationDate String
+  categoryId      String
+  category        Category          @relation(fields: [categoryId], references: [id])
+  reviews         ReviewAndRating[]
+  orderedBook     OrderedBook[]
+
+  @@map("books")
+}
+
+model ReviewAndRating {
+  id     String @id @default(uuid())
+  review String
+  rating Int
+  userId String
+  bookId String
+  user   User   @relation(fields: [userId], references: [id])
+  book   Book   @relation(fields: [bookId], references: [id])
+
+  @@map("reviewAndRating")
+}
+
+model Order {
+  id           String        @id @default(uuid())
+  userId       String
+  status       String        @default("pending")
+  createdAt    DateTime      @default(now())
+  user         User          @relation(fields: [userId], references: [id])
+  orderedBooks OrderedBook[]
+
+  @@map("orders")
+}
+
+model OrderedBook {
+  id       String @id @default(uuid())
+  orderId  String
+  bookId   String
+  quantity Int
+  order    Order  @relation(fields: [orderId], references: [id])
+  book     Book   @relation(fields: [bookId], references: [id])
+
+  @@map("orderBooks")
+}
