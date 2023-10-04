@@ -1,13 +1,14 @@
 import express from "express";
+import auth from "../../middlerware/auth";
+import { bookController } from "./book.controller";
 // import { categoryController } from "./category.controller";
 
 const router = express.Router();
+router.post("/create-book/", auth, bookController.bookCreateController);
+router.get("/", bookController.getAllBooksController);
+router.get("/:categoryId", bookController.getByCategoryIdController);
+router.get("/:id", bookController.getSingleController);
+router.patch("/:id", auth, bookController.updateBookController);
+router.delete("/:id", auth, bookController.deleteBookController);
 
-router.get("/create-book");
-// router.get("/:id", categoryController.categoryGetSingleController);
-// router.patch("/:id", auth, categoryController.categoryUpdateController);
-// router.delete("/:id", auth, categoryController.categoryDeleteController);
-// router.post("/", auth, categoryController.categoryCreateController);
-// router.post("/login", userController.userLoginController);
-
-export const categoryRouter = router;
+export const bookRouter = router;
