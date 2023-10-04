@@ -1,15 +1,18 @@
-import { NextFunction, Request, Response } from "express";
+import { RequestHandler } from "express";
 import jwt, { Secret } from "jsonwebtoken";
 
 // Define a custom interface that extends Request
-interface CustomRequest extends Request {
-  user?: any; // Define the user property as optional
-}
-const auth = async (req: CustomRequest, res: Response, next: NextFunction) => {
+// interface CustomRequest extends Request {
+//   user?: any; // Define the user property as optional
+// }
+
+const auth: RequestHandler = async (req: any, res: any, next: any) => {
+  // console.log(req?.headers);
+
   let verifiedToken;
   try {
     // Get authorization token
-    const token = req.headers?.authorization;
+    const token = req?.headers?.authorization;
 
     if (!token) {
       return res.status(401).json({

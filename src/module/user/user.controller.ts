@@ -98,9 +98,17 @@ const userLoginController: RequestHandler = async (req, res) => {
   }
 };
 
-const userGetController: RequestHandler = async (req, res) => {
+const userGetController: RequestHandler = async (req: any, res: any) => {
   try {
-    // const isAdmin = req?.user?.role;
+    const isAdmin = req?.user?.role === "admin";
+    // console.log(isAdmin, "ata req");
+    if (!isAdmin) {
+      res.status(404).json({
+        success: true,
+        statusCode: 404,
+        message: "Unauthorized access",
+      });
+    }
 
     const result = await userService.allUserGetService();
     res.status(200).json({
@@ -121,8 +129,17 @@ const userGetController: RequestHandler = async (req, res) => {
   }
 };
 
-const userSingleGetController: RequestHandler = async (req, res) => {
+const userSingleGetController: RequestHandler = async (req: any, res) => {
   try {
+    const isAdmin = req?.user?.role === "admin";
+    // console.log(isAdmin, "ata req");
+    if (!isAdmin) {
+      res.status(404).json({
+        success: true,
+        statusCode: 404,
+        message: "Unauthorized access",
+      });
+    }
     const result = await userService.singleUserGet(req.params.id);
     res.status(200).json({
       success: true,
@@ -139,8 +156,17 @@ const userSingleGetController: RequestHandler = async (req, res) => {
     });
   }
 };
-const userUpdateController: RequestHandler = async (req, res) => {
+const userUpdateController: RequestHandler = async (req: any, res) => {
   try {
+    const isAdmin = req?.user?.role === "admin";
+    // console.log(isAdmin, "ata req");
+    if (!isAdmin) {
+      res.status(404).json({
+        success: true,
+        statusCode: 404,
+        message: "Unauthorized access",
+      });
+    }
     const id = req.params.id;
     const data = req.body;
     const result = await userService.userProfileUpdate(data, id);
@@ -161,6 +187,36 @@ const userUpdateController: RequestHandler = async (req, res) => {
     });
   }
 };
+const deleteUserController: RequestHandler = async (req: any, res) => {
+  try {
+    const isAdmin = req?.user?.role === "admin";
+    // console.log(isAdmin, "ata req");
+    if (!isAdmin) {
+      res.status(404).json({
+        success: true,
+        statusCode: 404,
+        message: "Unauthorized access",
+      });
+    }
+    const id = req.params.id;
+    const result = await userService.userDeleteService(id);
+    res.status(200).json({
+      success: true,
+      statusCode: 200,
+      message: "User deleted successfully",
+      data: {
+        result,
+      },
+    });
+  } catch (err) {
+    res.status(StatusCodes.UNAUTHORIZED).json({
+      statusCode: StatusCodes.UNAUTHORIZED,
+      success: false,
+      message: "Failed to user delete",
+      err: err,
+    });
+  }
+};
 
 export const userController = {
   userCreateController,
@@ -168,4 +224,5 @@ export const userController = {
   userGetController,
   userSingleGetController,
   userUpdateController,
+  deleteUserController,
 };
