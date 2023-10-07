@@ -8,7 +8,12 @@ import { orderController } from "./order.controller";
 const router = express.Router();
 
 router.get("/", auth, orderController.orderGetController);
-// router.get("/:id", auth, userController.userSingleGetController);
+router.get("/:id", auth, orderController.OrdersforSpecificCustomersController);
+router.get(
+  "/api/v1/orders/:orderId",
+  auth,
+  orderController.OrdersforSpecificCustomersController
+);
 // router.patch("/:id", auth, userController.userUpdateController);
 // router.delete("/:id", auth, userController.deleteUserController);
 // router.post("/signup", userController.userCreateController);

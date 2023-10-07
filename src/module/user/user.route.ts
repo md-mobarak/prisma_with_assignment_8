@@ -6,6 +6,7 @@ import { userController } from "./user.controller";
 const router = express.Router();
 
 router.get("/", auth, userController.userGetController);
+router.get("/profile", auth, userController.userProfileGetController);
 router.get("/:id", auth, userController.userSingleGetController);
 router.patch("/:id", auth, userController.userUpdateController);
 router.delete("/:id", auth, userController.deleteUserController);

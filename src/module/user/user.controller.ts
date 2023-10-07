@@ -62,17 +62,30 @@ const userLoginController: RequestHandler = async (req, res) => {
         message: "Authentication failed.Invalid password.",
       });
     }
+
+    // Calculate a timestamp that is 1 year ago from the current time
+    const oneYearAgoTimestamp = Math.floor(Date.now() / 1000) - 31536001; // 1 year + 1 second = 31536001 seconds
     // Generate an access token
     const accessToken = jwt.sign(
-      { email: email, role: user.role, userId: user.id },
-      process.env.ACCESS_SECRET as Secret,
-      { expiresIn: "7d" }
+      {
+        email: email,
+        role: user.role,
+        userId: user.id,
+        iat: oneYearAgoTimestamp,
+      },
+      process.env.ACCESS_SECRET as Secret
+      // { expiresIn: "7d" }
     );
 
     const refreshToken = jwt.sign(
-      { email: email, role: user.role, userId: user.id },
-      process.env.REFRESH_SECRET as Secret,
-      { expiresIn: "7d" }
+      {
+        email: email,
+        role: user.role,
+        userId: user.id,
+        iat: oneYearAgoTimestamp,
+      },
+      process.env.REFRESH_SECRET as Secret
+      // { expiresIn: "7d" }
     );
 
     // Set the refresh token as a cookie in the response
@@ -100,6 +113,8 @@ const userLoginController: RequestHandler = async (req, res) => {
 
 const userGetController: RequestHandler = async (req: any, res: any) => {
   try {
+    console.log(req.user);
+
     const isAdmin = req?.user?.role === "admin";
     // console.log(isAdmin, "ata req");
     if (!isAdmin) {
@@ -217,7 +232,32 @@ const deleteUserController: RequestHandler = async (req: any, res) => {
     });
   }
 };
-
+const userProfileGetController: RequestHandler = async (req: any, res) => {
+  try {
+    const tokenUserId = req.user.userId;
+    const tokenRole = req.user.role;
+    const result = await userService.userProfileGetService(tokenUserId);
+    if (!result) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    // Check if the user is either an admin or a customer
+    if (tokenRole === "admin" || tokenRole === "customer") {
+      res.status(200).json({
+        success: true,
+        statusCode: 200,
+        message: "Profile retrieved successfully",
+        data: result,
+      });
+    } else {
+      res.status(403).json({ success: false, message: "Unauthorized access" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
 export const userController = {
   userCreateController,
   userLoginController,
@@ -225,4 +265,5 @@ export const userController = {
   userSingleGetController,
   userUpdateController,
   deleteUserController,
+  userProfileGetController,
 };

@@ -45,10 +45,9 @@ const orderCreateController: RequestHandler = async (req: any, res: any) => {
     });
   }
 };
-
 const orderGetController: RequestHandler = async (req: any, res: any) => {
   try {
-    console.log(req.user);
+    // console.log(req.user);
 
     const isAdmin = req?.user?.role === "admin";
     if (!isAdmin) {
@@ -74,8 +73,73 @@ const orderGetController: RequestHandler = async (req: any, res: any) => {
     });
   }
 };
+const OrdersforSpecificCustomersController = async (req: any, res: any) => {
+  try {
+    const { role, userId } = await req.user;
+    if (role !== "customer") {
+      return res.status(403).json({
+        success: false,
+        statusCode: 403,
+        message: "Only customers can retrieve their own orders",
+      });
+    }
+
+    const result = await ordersService.OrdersforSpecificCustomersService(
+      userId
+    );
+    res.json({
+      success: true,
+      statusCode: 200,
+      message: "Orders retrieved successfully",
+      data: result,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
+      success: false,
+      statusCode: 500,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+const userSingleOrderController = async (req: any, res: any) => {
+  try {
+    const { orderId } = req.params;
+    const userRole = (req.user as { role: string }).role;
+    const userId = (req.user as { userId: string }).userId;
+
+    const result = await ordersService.userSingleOrderService(orderId);
+    if (!result) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
+    }
+
+    if (userRole === "admin" || result.user.id === userId) {
+      return res.status(200).json({
+        success: true,
+        statusCode: 200,
+        message: "Order fetched successfully",
+        data: result,
+      });
+    } else {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied",
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching order:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+};
 
 export const orderController = {
   orderCreateController,
+  OrdersforSpecificCustomersController,
   orderGetController,
+  userSingleOrderController,
 };

@@ -49,6 +49,20 @@ const userDeleteService = async (id: string) => {
   });
   return result;
 };
+const userProfileGetService = async (id: string) => {
+  const result = await prisma.user.findUnique({
+    where: { id: id },
+    select: {
+      name: true,
+      email: true,
+      role: true,
+      contactNo: true,
+      address: true,
+      profileImg: true,
+    },
+  });
+  return result;
+};
 
 export const userService = {
   userLoginService,
@@ -57,4 +71,5 @@ export const userService = {
   singleUserGet,
   userProfileUpdate,
   userDeleteService,
+  userProfileGetService,
 };
