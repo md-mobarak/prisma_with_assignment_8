@@ -6,17 +6,12 @@ import { orderController } from "./order.controller";
 // import * as UserController from '../controllers/user.controller';
 
 const router = express.Router();
-
+router.post("/create-order", auth, orderController.orderCreateController);
 router.get("/", auth, orderController.orderGetController);
-router.get("/:id", auth, orderController.OrdersforSpecificCustomersController);
 router.get(
-  "/api/v1/orders/:orderId",
+  "/:orderId",
   auth,
   orderController.OrdersforSpecificCustomersController
 );
-// router.patch("/:id", auth, userController.userUpdateController);
-// router.delete("/:id", auth, userController.deleteUserController);
-// router.post("/signup", userController.userCreateController);
-router.post("/create-order", auth, orderController.orderCreateController);
 
 export const orderRuter = router;

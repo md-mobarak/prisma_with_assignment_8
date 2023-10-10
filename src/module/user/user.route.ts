@@ -10,7 +10,7 @@ router.get("/profile", auth, userController.userProfileGetController);
 router.get("/users/:id", auth, userController.userSingleGetController);
 router.patch("/users/:id", auth, userController.userUpdateController);
 router.delete("/users/:id", auth, userController.deleteUserController);
-router.post("/signup", userController.userCreateController);
-router.post("/login", userController.userLoginController);
+router.post("/auth/signup", userController.userCreateController);
+router.post("/auth/signin", userController.userLoginController);
 
 export const userRuter = router;
