@@ -5,11 +5,11 @@ import { userController } from "./user.controller";
 
 const router = express.Router();
 
-router.get("/", auth, userController.userGetController);
+router.get("/users", auth, userController.userGetController);
 router.get("/profile", auth, userController.userProfileGetController);
-router.get("/:id", auth, userController.userSingleGetController);
-router.patch("/:id", auth, userController.userUpdateController);
-router.delete("/:id", auth, userController.deleteUserController);
+router.get("/users/:id", auth, userController.userSingleGetController);
+router.patch("/users/:id", auth, userController.userUpdateController);
+router.delete("/users/:id", auth, userController.deleteUserController);
 router.post("/signup", userController.userCreateController);
 router.post("/login", userController.userLoginController);
 
