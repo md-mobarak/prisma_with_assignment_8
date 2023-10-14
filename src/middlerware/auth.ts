@@ -1,14 +1,14 @@
 import { RequestHandler } from "express";
 import jwt, { Secret } from "jsonwebtoken";
 
-// Define a custom interface that extends Request
-// interface CustomRequest extends Request {
-//   user?: any; // Define the user property as optional
-// }
-
 const auth: RequestHandler = async (req: any, res: any, next: any) => {
-  // console.log(req?.headers);
-
+  if (!req.headers) {
+    return res.status(401).json({
+      success: false,
+      statusCode: 401,
+      message: "Unauthorized user you",
+    });
+  }
   let verifiedToken;
   try {
     // Get authorization token
@@ -27,7 +27,6 @@ const auth: RequestHandler = async (req: any, res: any, next: any) => {
 
     // Assign the user to the request object
     req.user = verifiedToken;
-    // console.log(verifiedToken);
 
     next();
   } catch (err: any) {

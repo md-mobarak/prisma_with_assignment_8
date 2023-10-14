@@ -5,9 +5,8 @@ import { categoryService } from "./category.service";
 const categoryCreateController: RequestHandler = async (req: any, res: any) => {
   try {
     const isAdmin = req?.user?.role === "admin";
-    // console.log(isAdmin, "ata req");
     if (!isAdmin) {
-      res.status(404).json({
+      return res.status(404).json({
         success: true,
         statusCode: 404,
         message: "Unauthorized access",
@@ -15,14 +14,14 @@ const categoryCreateController: RequestHandler = async (req: any, res: any) => {
     }
     const data = req.body;
     const result = await categoryService.categoryCreateService(data);
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       statusCode: 200,
       message: "category create successfully",
       data: result,
     });
   } catch (err) {
-    res.status(StatusCodes.UNAUTHORIZED).json({
+    return res.status(StatusCodes.UNAUTHORIZED).json({
       statusCode: StatusCodes.UNAUTHORIZED,
       success: false,
       message: "Failed to category create",
@@ -34,14 +33,14 @@ const categoryGetController: RequestHandler = async (req, res) => {
   try {
     const result = await categoryService.getcCategoryservice();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       statusCode: 200,
       message: "category get successfully",
       data: result,
     });
   } catch (err) {
-    res.status(StatusCodes.UNAUTHORIZED).json({
+    return res.status(StatusCodes.UNAUTHORIZED).json({
       statusCode: StatusCodes.UNAUTHORIZED,
       success: false,
       message: "Failed to category get",
@@ -53,7 +52,7 @@ const categoryGetSingleController: RequestHandler = async (req, res) => {
   try {
     const id = req.params.id;
     const result = await categoryService.getSingleCategoryService(id);
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       statusCode: 200,
       message: "category single get successfully",
@@ -64,7 +63,7 @@ const categoryGetSingleController: RequestHandler = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(StatusCodes.UNAUTHORIZED).json({
+    return res.status(StatusCodes.UNAUTHORIZED).json({
       statusCode: StatusCodes.UNAUTHORIZED,
       success: false,
       message: "Failed to category get",
@@ -72,19 +71,27 @@ const categoryGetSingleController: RequestHandler = async (req, res) => {
     });
   }
 };
-const categoryUpdateController: RequestHandler = async (req, res) => {
+const categoryUpdateController: RequestHandler = async (req: any, res: any) => {
   try {
+    const isAdmin = req?.user?.role === "admin";
+    if (!isAdmin) {
+      return res.status(404).json({
+        success: true,
+        statusCode: 404,
+        message: "Unauthorized access",
+      });
+    }
     const id = req?.params?.id;
     const data = await req?.body;
     const result = await categoryService?.updateCategoryService(data, id);
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       statusCode: 200,
       message: "category updated successfully",
       data: result,
     });
   } catch (err) {
-    res.status(StatusCodes.UNAUTHORIZED).json({
+    return res.status(StatusCodes.UNAUTHORIZED).json({
       statusCode: StatusCodes.UNAUTHORIZED,
       success: false,
       message: "Failed to category get",
@@ -92,18 +99,26 @@ const categoryUpdateController: RequestHandler = async (req, res) => {
     });
   }
 };
-const categoryDeleteController: RequestHandler = async (req, res) => {
+const categoryDeleteController: RequestHandler = async (req: any, res: any) => {
   try {
+    const isAdmin = req?.user?.role === "admin";
+    if (!isAdmin) {
+      return res.status(404).json({
+        success: true,
+        statusCode: 404,
+        message: "Unauthorized access",
+      });
+    }
     const id = req?.params?.id;
     const result = await categoryService.deleteCategoryService(id);
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       statusCode: 200,
       message: "category deleted successfully",
       data: result,
     });
   } catch (err) {
-    res.status(StatusCodes.UNAUTHORIZED).json({
+    return res.status(StatusCodes.UNAUTHORIZED).json({
       statusCode: StatusCodes.UNAUTHORIZED,
       success: false,
       message: "Failed to category deleted",

@@ -12,6 +12,5 @@ router.get("/", category_controller_1.categoryController.categoryGetController);
 router.get("/:id", category_controller_1.categoryController.categoryGetSingleController);
 router.patch("/:id", auth_1.default, category_controller_1.categoryController.categoryUpdateController);
 router.delete("/:id", auth_1.default, category_controller_1.categoryController.categoryDeleteController);
-router.post("/", auth_1.default, category_controller_1.categoryController.categoryCreateController);
-// router.post("/login", userController.userLoginController);
+router.post("/create-category", auth_1.default, category_controller_1.categoryController.categoryCreateController);
 exports.categoryRouter = router;

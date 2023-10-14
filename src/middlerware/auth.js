@@ -13,13 +13,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-// Define a custom interface that extends Request
-// interface CustomRequest extends Request {
-//   user?: any; // Define the user property as optional
-// }
 const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    // console.log(req?.headers);
     var _a;
+    if (!req.headers) {
+        return res.status(401).json({
+            success: false,
+            statusCode: 401,
+            message: "Unauthorized user you",
+        });
+    }
     let verifiedToken;
     try {
         // Get authorization token
@@ -36,7 +38,6 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
         // console.log(verifiedToken);
         // Assign the user to the request object
         req.user = verifiedToken;
-        // console.log(verifiedToken);
         next();
     }
     catch (err) {

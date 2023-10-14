@@ -14,10 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
 const port = process.env.PORT || 5000;
-// const prisma = new PrismaClient();
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        app_1.default.listen(port, () => {
+        app_1.default === null || app_1.default === void 0 ? void 0 : app_1.default.get("/", (req, res) => __awaiter(this, void 0, void 0, function* () {
+            res === null || res === void 0 ? void 0 : res.send("hello world");
+        }));
+        app_1.default === null || app_1.default === void 0 ? void 0 : app_1.default.listen(port, () => {
             console.log(`assignment_8_with_prisma, running port ${port}`);
         });
     });

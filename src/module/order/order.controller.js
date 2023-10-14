@@ -17,16 +17,16 @@ const prisma = new client_1.PrismaClient();
 const orderCreateController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
-        console.log(req.user.role);
-        const isCustomer = ((_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a.role) === "customer";
+        const isCustomer = (yield ((_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a.role)) === "customer";
+        // console.log(isCustomer);s
         if (!isCustomer) {
-            res.status(404).json({
-                success: true,
+            return res.status(404).json({
+                success: false,
                 statusCode: 404,
-                message: "Unauthorized access",
+                message: "Only access customer",
             });
         }
-        const { orderedBooks } = req.body;
+        const { orderedBooks } = yield req.body;
         const order = yield prisma.order.create({
             data: {
                 userId: req.user.userId,
@@ -40,7 +40,7 @@ const orderCreateController = (req, res) => __awaiter(void 0, void 0, void 0, fu
                 orderedBooks: true,
             },
         });
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
             statusCode: 201,
             message: "Order created successfully",
@@ -48,19 +48,18 @@ const orderCreateController = (req, res) => __awaiter(void 0, void 0, void 0, fu
         });
     }
     catch (err) {
-        res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({
+        return res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({
             statusCode: http_status_codes_1.StatusCodes.UNAUTHORIZED,
             success: false,
             message: "Internal Server Error",
-            err: err,
+            err: console.log(err === null || err === void 0 ? void 0 : err.message),
         });
     }
 });
 const orderGetController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _b;
     try {
-        // console.log(req.user);
-        const isAdmin = ((_b = req === null || req === void 0 ? void 0 : req.user) === null || _b === void 0 ? void 0 : _b.role) === "admin";
+        const isAdmin = (yield ((_b = req === null || req === void 0 ? void 0 : req.user) === null || _b === void 0 ? void 0 : _b.role)) === "admin";
         if (!isAdmin) {
             res.status(404).json({
                 success: true,
@@ -81,7 +80,7 @@ const orderGetController = (req, res) => __awaiter(void 0, void 0, void 0, funct
             statusCode: http_status_codes_1.StatusCodes.UNAUTHORIZED,
             success: false,
             message: "Internal Server Error",
-            err: err,
+            err: console.log(err),
         });
     }
 });
@@ -104,7 +103,7 @@ const OrdersforSpecificCustomersController = (req, res) => __awaiter(void 0, voi
         });
     }
     catch (error) {
-        console.error("Error:", error);
+        // console.error("Error:", error);
         res.status(500).json({
             success: false,
             statusCode: 500,
@@ -139,7 +138,7 @@ const userSingleOrderController = (req, res) => __awaiter(void 0, void 0, void 0
         }
     }
     catch (error) {
-        console.error("Error fetching order:", error);
+        // console.error("Error fetching order:", error);
         return res
             .status(500)
             .json({ success: false, message: "Internal server error" });

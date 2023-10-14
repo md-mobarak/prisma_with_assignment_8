@@ -13,9 +13,9 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 app.use(express_1.default.urlencoded({ extended: true }));
-app.use("/api/v1/user", user_route_1.userRuter);
-app.use("/api/v1/category", category_route_1.categoryRouter);
-app.use("/api/v1/books", book_route_1.bookRouter);
+// 1/categories/create-category
+app.use("/api/v1/", user_route_1.userRuter);
+app.use("/api/v1/categories/", category_route_1.categoryRouter);
+app.use("/api/v1/books/", book_route_1.bookRouter);
 app.use("/api/v1/orders/", order_route_1.orderRuter);
 exports.default = app;
-// /api/v1/books/create-book

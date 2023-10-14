@@ -5,17 +5,16 @@ import { ordersService } from "./order.service";
 const prisma = new PrismaClient();
 const orderCreateController: RequestHandler = async (req: any, res: any) => {
   try {
-    console.log(req.user.role);
-
-    const isCustomer = req?.user?.role === "customer";
+    const isCustomer = (await req?.user?.role) === "customer";
+    // console.log(isCustomer);s
     if (!isCustomer) {
-      res.status(404).json({
-        success: true,
+      return res.status(404).json({
+        success: false,
         statusCode: 404,
-        message: "Unauthorized access",
+        message: "Only access customer",
       });
     }
-    const { orderedBooks } = req.body;
+    const { orderedBooks } = await req.body;
     const order = await prisma.order.create({
       data: {
         userId: req.user.userId,
@@ -29,27 +28,24 @@ const orderCreateController: RequestHandler = async (req: any, res: any) => {
         orderedBooks: true,
       },
     });
-
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       statusCode: 201,
       message: "Order created successfully",
       data: order,
     });
-  } catch (err) {
-    res.status(StatusCodes.UNAUTHORIZED).json({
+  } catch (err: any) {
+    return res.status(StatusCodes.UNAUTHORIZED).json({
       statusCode: StatusCodes.UNAUTHORIZED,
       success: false,
       message: "Internal Server Error",
-      err: err,
+      err: console.log(err?.message),
     });
   }
 };
 const orderGetController: RequestHandler = async (req: any, res: any) => {
   try {
-    // console.log(req.user);
-
-    const isAdmin = req?.user?.role === "admin";
+    const isAdmin = (await req?.user?.role) === "admin";
     if (!isAdmin) {
       res.status(404).json({
         success: true,
@@ -69,11 +65,14 @@ const orderGetController: RequestHandler = async (req: any, res: any) => {
       statusCode: StatusCodes.UNAUTHORIZED,
       success: false,
       message: "Internal Server Error",
-      err: err,
+      err: console.log(err),
     });
   }
 };
-const OrdersforSpecificCustomersController = async (req: any, res: any) => {
+const OrdersforSpecificCustomersController: RequestHandler = async (
+  req: any,
+  res: any
+) => {
   try {
     const { role, userId } = await req.user;
     if (role !== "customer") {
@@ -94,7 +93,7 @@ const OrdersforSpecificCustomersController = async (req: any, res: any) => {
       data: result,
     });
   } catch (error) {
-    console.error("Error:", error);
+    // console.error("Error:", error);
     res.status(500).json({
       success: false,
       statusCode: 500,
@@ -103,7 +102,10 @@ const OrdersforSpecificCustomersController = async (req: any, res: any) => {
   }
 };
 
-const userSingleOrderController = async (req: any, res: any) => {
+const userSingleOrderController: RequestHandler = async (
+  req: any,
+  res: any
+) => {
   try {
     const { orderId } = req.params;
     const userRole = (req.user as { role: string }).role;
@@ -130,7 +132,7 @@ const userSingleOrderController = async (req: any, res: any) => {
       });
     }
   } catch (error) {
-    console.error("Error fetching order:", error);
+    // console.error("Error fetching order:", error);
     return res
       .status(500)
       .json({ success: false, message: "Internal server error" });

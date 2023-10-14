@@ -16,9 +16,8 @@ const categoryCreateController = (req, res) => __awaiter(void 0, void 0, void 0,
     var _a;
     try {
         const isAdmin = ((_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a.role) === "admin";
-        // console.log(isAdmin, "ata req");
         if (!isAdmin) {
-            res.status(404).json({
+            return res.status(404).json({
                 success: true,
                 statusCode: 404,
                 message: "Unauthorized access",
@@ -26,7 +25,7 @@ const categoryCreateController = (req, res) => __awaiter(void 0, void 0, void 0,
         }
         const data = req.body;
         const result = yield category_service_1.categoryService.categoryCreateService(data);
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             statusCode: 200,
             message: "category create successfully",
@@ -34,7 +33,7 @@ const categoryCreateController = (req, res) => __awaiter(void 0, void 0, void 0,
         });
     }
     catch (err) {
-        res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({
+        return res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({
             statusCode: http_status_codes_1.StatusCodes.UNAUTHORIZED,
             success: false,
             message: "Failed to category create",
@@ -45,7 +44,7 @@ const categoryCreateController = (req, res) => __awaiter(void 0, void 0, void 0,
 const categoryGetController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const result = yield category_service_1.categoryService.getcCategoryservice();
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             statusCode: 200,
             message: "category get successfully",
@@ -53,7 +52,7 @@ const categoryGetController = (req, res) => __awaiter(void 0, void 0, void 0, fu
         });
     }
     catch (err) {
-        res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({
+        return res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({
             statusCode: http_status_codes_1.StatusCodes.UNAUTHORIZED,
             success: false,
             message: "Failed to category get",
@@ -66,7 +65,7 @@ const categoryGetSingleController = (req, res) => __awaiter(void 0, void 0, void
     try {
         const id = req.params.id;
         const result = yield category_service_1.categoryService.getSingleCategoryService(id);
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             statusCode: 200,
             message: "category single get successfully",
@@ -78,7 +77,7 @@ const categoryGetSingleController = (req, res) => __awaiter(void 0, void 0, void
         });
     }
     catch (err) {
-        res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({
+        return res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({
             statusCode: http_status_codes_1.StatusCodes.UNAUTHORIZED,
             success: false,
             message: "Failed to category get",
@@ -87,12 +86,20 @@ const categoryGetSingleController = (req, res) => __awaiter(void 0, void 0, void
     }
 });
 const categoryUpdateController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _d;
+    var _d, _e;
     try {
-        const id = (_d = req === null || req === void 0 ? void 0 : req.params) === null || _d === void 0 ? void 0 : _d.id;
+        const isAdmin = ((_d = req === null || req === void 0 ? void 0 : req.user) === null || _d === void 0 ? void 0 : _d.role) === "admin";
+        if (!isAdmin) {
+            return res.status(404).json({
+                success: true,
+                statusCode: 404,
+                message: "Unauthorized access",
+            });
+        }
+        const id = (_e = req === null || req === void 0 ? void 0 : req.params) === null || _e === void 0 ? void 0 : _e.id;
         const data = yield (req === null || req === void 0 ? void 0 : req.body);
         const result = yield (category_service_1.categoryService === null || category_service_1.categoryService === void 0 ? void 0 : category_service_1.categoryService.updateCategoryService(data, id));
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             statusCode: 200,
             message: "category updated successfully",
@@ -100,7 +107,7 @@ const categoryUpdateController = (req, res) => __awaiter(void 0, void 0, void 0,
         });
     }
     catch (err) {
-        res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({
+        return res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({
             statusCode: http_status_codes_1.StatusCodes.UNAUTHORIZED,
             success: false,
             message: "Failed to category get",
@@ -109,11 +116,19 @@ const categoryUpdateController = (req, res) => __awaiter(void 0, void 0, void 0,
     }
 });
 const categoryDeleteController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _e;
+    var _f, _g;
     try {
-        const id = (_e = req === null || req === void 0 ? void 0 : req.params) === null || _e === void 0 ? void 0 : _e.id;
+        const isAdmin = ((_f = req === null || req === void 0 ? void 0 : req.user) === null || _f === void 0 ? void 0 : _f.role) === "admin";
+        if (!isAdmin) {
+            return res.status(404).json({
+                success: true,
+                statusCode: 404,
+                message: "Unauthorized access",
+            });
+        }
+        const id = (_g = req === null || req === void 0 ? void 0 : req.params) === null || _g === void 0 ? void 0 : _g.id;
         const result = yield category_service_1.categoryService.deleteCategoryService(id);
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             statusCode: 200,
             message: "category deleted successfully",
@@ -121,7 +136,7 @@ const categoryDeleteController = (req, res) => __awaiter(void 0, void 0, void 0,
         });
     }
     catch (err) {
-        res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({
+        return res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({
             statusCode: http_status_codes_1.StatusCodes.UNAUTHORIZED,
             success: false,
             message: "Failed to category deleted",

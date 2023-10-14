@@ -9,11 +9,9 @@ const app: Application = express();
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
-
+// 1/categories/create-category
 app.use("/api/v1/", userRuter);
-app.use("/api/v1/categories", categoryRouter);
-app.use("/api/v1/books", bookRouter);
+app.use("/api/v1/categories/", categoryRouter);
+app.use("/api/v1/books/", bookRouter);
 app.use("/api/v1/orders/", orderRuter);
 export default app;
-
-// /api/v1/books/create-book

@@ -8,6 +8,10 @@ router.get("/", categoryController.categoryGetController);
 router.get("/:id", categoryController.categoryGetSingleController);
 router.patch("/:id", auth, categoryController.categoryUpdateController);
 router.delete("/:id", auth, categoryController.categoryDeleteController);
-router.post("/", auth, categoryController.categoryCreateController);
+router.post(
+  "/create-category",
+  auth,
+  categoryController.categoryCreateController
+);
 
 export const categoryRouter = router;
